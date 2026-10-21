@@ -13,7 +13,57 @@ const prices = {
   "Custom Request": 0
 };
 
-const cart = {};
+
+const CART_STORAGE_KEY = "nova-shop-cart-v1";
+
+function loadSavedCart() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem(CART_STORAGE_KEY) || "{}"
+    );
+
+    if (!saved || typeof saved !== "object" || Array.isArray(saved)) {
+      return {};
+    }
+
+    return Object.fromEntries(
+      Object.entries(saved).filter(([name, quantity]) =>
+        Object.prototype.hasOwnProperty.call(prices, name) &&
+        Number.isInteger(quantity) &&
+        quantity > 0 &&
+        quantity < 1000
+      )
+    );
+  } catch {
+    return {};
+  }
+}
+
+function saveCart() {
+  try {
+    localStorage.setItem(
+      CART_STORAGE_KEY,
+      JSON.stringify(cart)
+    );
+  } catch {
+    // The cart still works if browser storage is unavailable.
+  }
+}
+
+const cart = new Proxy(loadSavedCart(), {
+  set(target, property, value) {
+    Reflect.set(target, property, value);
+    saveCart();
+    return true;
+  },
+
+  deleteProperty(target, property) {
+    Reflect.deleteProperty(target, property);
+    saveCart();
+    return true;
+  }
+});
+
 
 document.getElementById("discord-link").href = DISCORD_INVITE_URL;
 document.getElementById("year").textContent = new Date().getFullYear();
