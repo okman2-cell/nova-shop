@@ -160,27 +160,43 @@ document.querySelectorAll(".order-button").forEach(button => {
 
   button.addEventListener("click", () => {
     const name = button.dataset.product;
-    cart[name] = (cart[name] || 0) + 1;
-    renderCart();
-
-    document.getElementById("cart-message").textContent =
-      `${name} added to your cart.`;
-
-    document.getElementById("shopping-cart")
-      .scrollIntoView({ behavior: "smooth", block: "nearest" });
-  });
-});
-
-// Category filters
-const filters = document.querySelectorAll(".filter");
-const cards = document.querySelectorAll(".product-card");
-
-filters.forEach(button => {
-  button.addEventListener("click", () => {
-    filters.forEach(item => item.classList.remove("active"));
-    button.classList.add("active");
-
-    const selected = button.dataset.filter;
+ 
     cards.forEach(card => {
       card.classList.toggle(
         "hidden",
+        selected !== "all" && card.dataset.category !== selected
+      );
+    });
+  });
+});
+
+// Copy order details to send in Discord
+document.getElementById("copy-order").addEventListener("click", async () => {
+  const summary = orderSummary();
+  if (!summary) return;
+
+  try {
+    await navigator.clipboard.writeText(summary);
+    document.getElementById("cart-message").textContent =
+      "Order copied! Paste it into your Discord ticket.";
+  } catch {
+    document.getElementById("cart-message").textContent =
+      "Copy unavailable. Please copy your order details manually.";
+  }
+});
+
+// Discord checkout buttons
+document.getElementById("join-discord").addEventListener("click", () => {
+  if (!orderSummary()) return;
+  window.open(DISCORD_INVITE_URL, "_blank", "noopener,noreferrer");
+});
+
+document.getElementById("open-ticket").addEventListener("click", () => {
+  if (!orderSummary()) return;
+  window.open(DISCORD_INVITE_URL, "_blank", "noopener,noreferrer");
+
+  document.getElementById("cart-message").textContent =
+    "In Discord, open a ticket and paste your order details.";
+});
+
+renderCart();
