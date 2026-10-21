@@ -227,18 +227,33 @@ function orderSummary() {
 cards.forEach(card => {
 }
 
-// Add-to-cart buttons
+// Product buttons
 document.querySelectorAll(".order-button").forEach(button => {
-  button.textContent = "Add to cart +";
+  const name = button.dataset.product;
+  const isCustom = name === "Custom Request";
+
+  button.textContent = isCustom
+    ? "Request a quote ↗"
+    : "Add to cart +";
+
   button.type = "button";
 
   button.addEventListener("click", () => {
-    const name = button.dataset.product;
+    if (isCustom) {
+      window.open(
+        DISCORD_INVITE,
+        "_blank",
+        "noopener,noreferrer"
+      );
+      return;
+    }
+
     if (!name || !(name in prices)) return;
 
     cart[name] = (cart[name] || 0) + 1;
     renderCart();
-
+  });
+});
     document.getElementById("cart-message").textContent =
       `${name} added to your cart.`;
 
