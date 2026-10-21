@@ -19,6 +19,13 @@ const prices = {
   "Gaming Pack": 3,
   "Custom Request": 0
 };
+  "Custom Logo": 5,
+  "Banner Pack": 4,
+  "Discord Server Setup": 8,
+  "Bot Configuration": 6,
+  "Gaming Pack": 3,
+  "Custom Request": 0
+};
 
 
 const CART_STORAGE_KEY = "nova-shop-cart-v1";
