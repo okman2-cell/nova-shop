@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0912">
+  <meta name="description" content="Nova Shop — digital products, Discord services, gaming packs, and custom designs.">
+  <title>Nova Shop | Digital Marketplace</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Nova Shop home">
+      <span class="brand-mark">✦</span>
+      <span>NOVA <b>SHOP</b></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#products">Products</a>
+      <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="button button-small button-outline" href="#community">Join Discord ↗</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-glow"></div>
+      <p class="eyebrow"><span class="status-dot"></span> YOUR DIGITAL MARKETPLACE</p>
+      <h1>Upgrade your<br><span>digital world.</span></h1>
+      <p class="hero-copy">Discover digital products, custom designs, Discord services, and gaming extras — all in one place.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#products">Explore products <span>→</span></a>
+        <a class="button button-outline" href="#community">Join our Discord</a>
+      </div>
+      <div class="hero-note"><span>✦</span> Made for creators, gamers, and communities.</div>
+    </section>
+
+    <section class="section" id="products">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">THE COLLECTION</p>
+          <h2>Explore the shop</h2>
+        </div>
+        <p class="section-subtitle">Find something that fits your next project.</p>
+      </div>
+
+      <div class="filter-row" role="group" aria-label="Filter products">
+        <button class="filter active" data-filter="all">All products</button>
+        <button class="filter" data-filter="design">Design</button>
+        <button class="filter" data-filter="discord">Discord services</button>
+        <button class="filter" data-filter="gaming">Gaming</button>
+        <button class="filter" data-filter="digital">Digital goods</button>
+      </div>
+
+      <div class="product-grid" id="product-grid">
+        <article class="product-card" data-category="design">
+          <div class="product-art art-purple"><span class="art-symbol">✦</span><span class="art-label">CREATIVE STUDIO</span></div>
+          <div class="product-info">
+            <p class="product-category">DESIGN</p>
+            <h3>Custom Logo</h3>
+            <p>A unique logo concept for your brand or community.</p>
+            <div class="product-bottom"><span class="price">From €5.00</span><button class="order-button" data-product="Custom Logo">Order ↗</button></div>
+          </div>
+        </article>
+        <article class="product-card" data-category="design">
+          <div class="product-art art-blue"><span class="art-symbol">▰</span><span class="art-label">VISUAL IDENTITY</span></div>
+          <div class="product-info">
+            <p class="product-category">DESIGN</p>
+            <h3>Banner Pack</h3>
+            <p>Matching banners for your server, profile, or social pages.</p>
+            <div class="product-bottom"><span class="price">From €4.00</span><button class="order-button" data-product="Banner Pack">Order ↗</button></div>
+          </div>
+        </article>
+        <article class="product-card" data-category="discord">
+          <div class="product-art art-pink"><span class="art-symbol">⌘</span><span class="art-label">COMMUNITY TOOLS</span></div>
+          <div class="product-info">
+            <p class="product-category">DISCORD SERVICES</p>
+            <h3>Server Setup</h3>
+            <p>Organized channels, roles, permissions, and a clean layout.</p>
+            <div class="product-bottom"><span class="price">From €8.00</span><button class="order-button" data-product="Discord Server Setup">Order ↗</button></div>
+          </div>
+        </article>
+        <article class="product-card" data-category="discord">
+          <div class="product-art art-green"><span class="art-symbol">⚙</span><span class="art-label">AUTOMATION</span></div>
+          <div class="product-info">
+            <p class="product-category">DISCORD SERVICES</p>
+            <h3>Bot Configuration</h3>
+            <p>Help configuring moderation, tickets, and community tools.</p>
+            <div class="product-bottom"><span class="price">From €6.00</span><button class="order-button" data-product="Bot Configuration">Order ↗</button></div>
+          </div>
+        </article>
+        <article class="product-card" data-category="gaming">
+          <div class="product-art art-orange"><span class="art-symbol">⌁</span><span class="art-label">GAMING CORNER</span></div>
+          <div class="product-info">
+            <p class="product-category">GAMING</p>
+            <h3>Gaming Pack</h3>
+            <p>A customizable digital pack for your gaming community.</p>
+            <div class="product-bottom"><span class="price">From €3.00</span><button class="order-button" data-product="Gaming Pack">Order ↗</button></div>
+          </div>
+        </article>
+        <article class="product-card" data-category="digital">
+          <div class="product-art art-silver"><span class="art-symbol">✧</span><span class="art-label">DIGITAL GOODS</span></div>
+          <div class="product-info">
+            <p class="product-category">DIGITAL GOODS</p>
+            <h3>Custom Request</h3>
+            <p>Have a different idea? Tell us what you need.</p>
+            <div class="product-bottom"><span class="price">Get a quote</span><button class="order-button" data-product="Custom Request">Order ↗</button></div>
+          </div>
+        </article>
+      </div>
+      <p class="demo-notice">Demo catalog: edit the sample products and prices before publishing. Orders currently open Discord; online checkout is not enabled.</p>
+    </section>
+
+    <section class="community" id="community">
+      <div class="community-icon">✦</div>
+      <div>
+        <p class="eyebrow">LET'S CONNECT</p>
+        <h2>Need help with an order?</h2>
+        <p>Join the Nova Shop Discord to ask questions, discuss custom requests, and get support.</p>
+      </div>
+      <a class="button button-primary" id="discord-link" href="https://discord.com/" target="_blank" rel="noopener noreferrer">Join Discord <span>↗</span></a>
+    </section>
+
+    <section class="section about-section" id="about">
+      <p class="eyebrow">WHY NOVA SHOP</p>
+      <h2>Small details. Big difference.</h2>
+      <div class="feature-grid">
+        <div class="feature"><span>✦</span><h3>Made with care</h3><p>Thoughtful digital products and custom work.</p></div>
+        <div class="feature"><span>⌘</span><h3>Community first</h3><p>Get help and updates through our Discord server.</p></div>
+        <div class="feature"><span>↗</span><h3>Custom requests</h3><p>Ask about a product tailored to your needs.</p></div>
+      </div>
+    </section>
+
+    <section class="section faq-section" id="faq">
+      <p class="eyebrow">QUICK ANSWERS</p>
+      <h2>Frequently asked questions</h2>
+      <details><summary>How do I place an order?</summary><p>Choose a product and click Order. You'll be directed to Discord to discuss the order with the shop team.</p></details>
+      <details><summary>Can I request a custom product?</summary><p>Yes. Choose Custom Request and explain what you need in Discord.</p></details>
+      <details><summary>Can I pay directly on this website?</summary><p>Not yet. This starter website does not collect payments or personal payment details. Add a trusted payment provider before offering online checkout.</p></details>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a class="brand" href="#"><span class="brand-mark">✦</span><span>NOVA <b>SHOP</b></span></a>
+    <p>© <span id="year"></span> Nova Shop. All rights reserved.</p>
+    <a href="#top" class="back-top">Back to top ↑</a>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
