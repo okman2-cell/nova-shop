@@ -1,7 +1,7 @@
 
 "use strict";
 
-// NOVA SHOP — CART & DISCORD
+// NOVA SHOP — CART, PRODUCTS & DISCORD
 const DISCORD_INVITE_URL = "https://discord.gg/tvzbHAbYd";
 
 const prices = {
@@ -12,22 +12,8 @@ const prices = {
   "Gaming Pack": 3,
   "Custom Request": 0
 };
-  "Custom Logo": 5,
-  "Banner Pack": 4,
-  "Discord Server Setup": 8,
-  "Bot Configuration": 6,
-  "Gaming Pack": 3,
-  "Custom Request": 0
-};
-  "Custom Logo": 5,
-  "Banner Pack": 4,
-  "Discord Server Setup": 8,
-  "Bot Configuration": 6,
-  "Gaming Pack": 3,
-  "Custom Request": 0
-};
 
-
+// Save cart in this browser
 const CART_STORAGE_KEY = "nova-shop-cart-v1";
 
 function loadSavedCart() {
@@ -60,7 +46,7 @@ function saveCart() {
       JSON.stringify(cart)
     );
   } catch {
-    // The cart still works if browser storage is unavailable.
+    // Cart still works if browser storage is unavailable.
   }
 }
 
@@ -78,9 +64,18 @@ const cart = new Proxy(loadSavedCart(), {
   }
 });
 
+// Page links
+const discordLink = document.getElementById("discord-link");
+if (discordLink) {
+  discordLink.href = DISCORD_INVITE_URL;
+  discordLink.target = "_blank";
+  discordLink.rel = "noopener noreferrer";
+}
 
-document.getElementById("discord-link").href = DISCORD_INVITE_URL;
-document.getElementById("year").textContent = new Date().getFullYear();
+const year = document.getElementById("year");
+if (year) {
+  year.textContent = new Date().getFullYear();
+}
 
 // Cart styles
 const style = document.createElement("style");
@@ -91,46 +86,58 @@ style.textContent = `
   border: 1px solid #6536a8;
   border-radius: 20px;
   background: #100c1b;
+  color: #fff;
 }
 .cart-panel h2 { margin-top: 0; }
 .cart-item {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
   padding: 14px 0;
   border-bottom: 1px solid #30223f;
 }
-.cart-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 20px;
-}
-.cart-actions button, .cart-item button {
+.cart-item button, .cart-actions button {
   cursor: pointer;
   border: 1px solid #8b5cf6;
   border-radius: 10px;
   background: #211532;
   color: white;
   padding: 10px 14px;
+  margin: 2px;
 }
-.cart-total { color: #c4a2ff; font-size: 1.25rem; }
+.cart-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.cart-actions button:hover, .cart-item button:hover {
+  background: #45266c;
+}
+.cart-total {
+  color: #c4a2ff;
+  font-size: 1.25rem;
+}
 .cart-empty { color: #aaa0b8; }
 .cart-message { color: #c4a2ff; margin-top: 14px; }
 .product-card.hidden { display: none !important; }
 `;
 document.head.appendChild(style);
 
-// Create cart
+// Create cart panel
 const cartPanel = document.createElement("section");
 cartPanel.className = "cart-panel";
 cartPanel.id = "shopping-cart";
+
 cartPanel.innerHTML = `
   <h2>Your shopping cart</h2>
   <div id="cart-items" class="cart-empty">Your cart is empty.</div>
-  <p class="cart-total">Total: <strong id="cart-total">€0.00</strong></p>
-  <p>Custom requests may require a separate quote.</p>
+  <p class="cart-total">
+    Total: <strong id="cart-total">€0.00</strong>
+  </p>
+  <p>Custom requests require a separate quote.</p>
   <div class="cart-actions">
     <button type="button" id="copy-order">Copy order details</button>
     <button type="button" id="join-discord">Join Discord for Pay ↗</button>
@@ -140,14 +147,23 @@ cartPanel.innerHTML = `
 `;
 
 const notice = document.querySelector("#products .demo-notice");
-if (notice) notice.before(cartPanel);
-else document.getElementById("products").appendChild(cartPanel);
+if (notice) {
+  notice.before(cartPanel);
+} else {
+  const productsSection = document.getElementById("products");
+  if (productsSection) productsSection.appendChild(cartPanel);
+}
 
+// Render products in cart
 function renderCart() {
   const container = document.getElementById("cart-items");
+  const totalElement = document.getElementById("cart-total");
+
   container.replaceChildren();
 
-  const entries = Object.entries(cart).filter(([, qty]) => qty > 0);
+  const entries = Object.entries(cart).filter(
+    ([, quantity]) => quantity > 0
+  );
 
   if (entries.length === 0) {
     container.textContent = "Your cart is empty.";
@@ -155,12 +171,12 @@ function renderCart() {
   } else {
     container.className = "";
 
-    entries.forEach(([name, qty]) => {
+    entries.forEach(([name, quantity]) => {
       const row = document.createElement("div");
       row.className = "cart-item";
 
-      const label = document.createElement("span");
-      label.textContent = `${name} × ${qty}`;
+      const details = document.createElement("span");
+      details.textContent = `${name} × ${quantity}`;
 
       const controls = document.createElement("span");
 
@@ -168,9 +184,14 @@ function renderCart() {
       minus.type = "button";
       minus.textContent = "−";
       minus.setAttribute("aria-label", `Remove one ${name}`);
+
       minus.addEventListener("click", () => {
         cart[name]--;
-        if (cart[name] <= 0) delete cart[name];
+
+        if (cart[name] <= 0) {
+          delete cart[name];
+        }
+
         renderCart();
       });
 
@@ -178,27 +199,38 @@ function renderCart() {
       plus.type = "button";
       plus.textContent = "+";
       plus.setAttribute("aria-label", `Add one ${name}`);
+
       plus.addEventListener("click", () => {
         cart[name]++;
         renderCart();
       });
 
-      controls.append(minus, " ", plus);
-      row.append(label, controls);
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.textContent = "Remove";
+      remove.addEventListener("click", () => {
+        delete cart[name];
+        renderCart();
+      });
+
+      controls.append(minus, " ", plus, " ", remove);
+      row.append(details, controls);
       container.appendChild(row);
     });
   }
 
   const total = entries.reduce(
-    (sum, [name, qty]) => sum + prices[name] * qty, 0
+    (sum, [name, quantity]) =>
+      sum + prices[name] * quantity,
+    0
   );
 
-  document.getElementById("cart-total").textContent =
-    `€${total.toFixed(2)}`;
+  totalElement.textContent = `€${total.toFixed(2)}`;
 
   return entries;
 }
 
+// Create order summary
 function orderSummary() {
   const entries = renderCart();
   const message = document.getElementById("cart-message");
@@ -208,23 +240,30 @@ function orderSummary() {
     return "";
   }
 
-  const lines = entries.map(([name, qty]) => {
+  const lines = entries.map(([name, quantity]) => {
     const price = prices[name];
-    return `${name} × ${qty} — ${
-      price === 0 ? "Price to be confirmed" : `€${(price * qty).toFixed(2)}`
-    }`;
+
+    if (price === 0) {
+      return `${name} × ${quantity} — Price to be confirmed`;
+    }
+
+    return `${name} × ${quantity} — €${(price * quantity).toFixed(2)}`;
   });
 
   const total = entries.reduce(
-    (sum, [name, qty]) => sum + prices[name] * qty, 0
+    (sum, [name, quantity]) =>
+      sum + prices[name] * quantity,
+    0
   );
 
   return [
     "NOVA SHOP ORDER",
+    "",
     ...lines,
+    "",
     `Estimated total: €${total.toFixed(2)}`,
     "Custom requests may cost extra."
-cards.forEach(card => {
+  ].join("\n");
 }
 
 // Product buttons
@@ -241,19 +280,20 @@ document.querySelectorAll(".order-button").forEach(button => {
   button.addEventListener("click", () => {
     if (isCustom) {
       window.open(
-        DISCORD_INVITE,
+        DISCORD_INVITE_URL,
         "_blank",
         "noopener,noreferrer"
       );
       return;
     }
 
-    if (!name || !(name in prices)) return;
+    if (!name || !Object.prototype.hasOwnProperty.call(prices, name)) {
+      return;
+    }
 
     cart[name] = (cart[name] || 0) + 1;
     renderCart();
-  });
-});
+
     document.getElementById("cart-message").textContent =
       `${name} added to your cart.`;
 
@@ -278,13 +318,14 @@ filters.forEach(button => {
     cards.forEach(card => {
       card.classList.toggle(
         "hidden",
-        selected !== "all" && card.dataset.category !== selected
+        selected !== "all" &&
+        card.dataset.category !== selected
       );
     });
   });
 });
 
-// Copy order summary
+// Copy order details
 document.getElementById("copy-order").addEventListener("click", async () => {
   const summary = orderSummary();
   if (!summary) return;
@@ -301,17 +342,28 @@ document.getElementById("copy-order").addEventListener("click", async () => {
 // Open Discord for payment discussion
 document.getElementById("join-discord").addEventListener("click", () => {
   if (!orderSummary()) return;
-  window.open(DISCORD_INVITE_URL, "_blank", "noopener,noreferrer");
+
+  window.open(
+    DISCORD_INVITE_URL,
+    "_blank",
+    "noopener,noreferrer"
+  );
 });
 
-// Open Discord for ticket support
+// Open Discord to arrange a ticket
 document.getElementById("open-ticket").addEventListener("click", () => {
   const summary = orderSummary();
   if (!summary) return;
 
-  window.open(DISCORD_INVITE_URL, "_blank", "noopener,noreferrer");
+  window.open(
+    DISCORD_INVITE_URL,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
   document.getElementById("cart-message").textContent =
     "In Discord, open a ticket and send your order details. Use Copy order details first.";
 });
 
+// Initial render
 renderCart();
