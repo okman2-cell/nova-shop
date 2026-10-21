@@ -160,7 +160,7 @@ function orderSummary() {
     ...lines,
     `Estimated total: €${total.toFixed(2)}`,
     "Custom requests may cost extra."
-  ].join("\n");
+cards.forEach(card => {
 }
 
 // Add-to-cart buttons
